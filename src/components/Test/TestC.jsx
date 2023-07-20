@@ -10,25 +10,53 @@ const TestC = () => {
 
         console.log(response.data)
     }
+    const getUser = async (token) => {
+        //const token = localStorage.getItem('token')
+        if(token){
+            try {
+                axios.defaults.headers.common['Accept']='application/json'
+                axios.defaults.headers.common['Authorization']=`Bearer ${token}`
+                const res = await axios.get('http://localhost:8000/api/auth/user')
+                console.log(res.data)
+                /*
+                dispatch({
+                    type:'LOGIN',
+                    payload: {
+                        user: res.data.user
+                    }
+                })*/
+            } catch (error) {
+                toast('error network')
+                console.log(error)
+                delete axios.defaults.headers.common['Authorization']
+            }
+        }
+        else {
+            delete axios.defaults.headers.common['Authorization']
+        }
+    }
     const TestLogin = async () => {
         let email = 'testC@test.net';
         let password = 'test'
         JSON.stringify({email,password})
         try {
             axios.defaults.headers.common['Accept']='application/json'
-            const response = await axios.get('https://localhost:8000/api/test/testL')
-            console.log(response)
-            //await getUser();
+            const response = await axios.post('http://localhost:8000/api/auth/login',JSON.stringify({email,password}))
+            console.log(response.data)
+            await getUser(response.data.access_token);
         } catch (error) {
             toast(error)
             console.log(error)
         }
     }
+
+
+
     const docTest = async () => {
         let password = 'test'
         try {
             axios.defaults.headers.common['Accept']='application/json'
-            const response = await axios.post('https://localhost:8000/api/doctor/test')
+            const response = await axios.post('http://localhost:8000/api/doctor/test')
             console.log(response)
             //await getUser();
         } catch (error) {

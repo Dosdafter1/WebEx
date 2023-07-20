@@ -15,11 +15,11 @@ export const AuthProvider = ({children}) =>{
         console.log(email,password)
         try {
             axios.defaults.headers.common['Accept']='application/json'
-            const response = await axios.post('https://localhost:8000/api/login',JSON.stringify({email,password}))
+            const response = await axios.post('http://localhost:8000/api/login',JSON.stringify({email,password}))
             console.log(response)
             //await getUser();
         } catch (error) {
-            toast(error)
+            toast('error network')
             console.log(error)
         }
     }
@@ -27,11 +27,12 @@ export const AuthProvider = ({children}) =>{
     const register = async (email,password,name, phone, role) =>{
         try {
             axios.defaults.headers.common['Accept']='application/json'
-            const res = await axios.post('https://localhost:8000/api/sigup',
-            {email, password, name, phone, role})
+            const res = await axios.post('http://localhost:8000/api/register',
+            JSON.stringify({email, password, name, phone, role}))
             localStorage.setItem('token',res.data.token)
             await getUser();
         } catch (error) {
+            toast('error network')
             console.log(error)
         }
     }
@@ -46,6 +47,7 @@ export const AuthProvider = ({children}) =>{
                 type:'LOGOUT'
             })
         } catch (error) {
+            toast('error network')
             console.log(error)
         }
     }
@@ -65,6 +67,7 @@ export const AuthProvider = ({children}) =>{
                     }
                 })
             } catch (error) {
+                toast('error network')
                 console.log(error)
             }
         }

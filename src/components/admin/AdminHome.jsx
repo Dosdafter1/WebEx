@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ClientHeader = () => {
+const AdminHome = () => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ const ClientHeader = () => {
     );
 }
 
-export default ClientHeader;
+export default AdminHome;

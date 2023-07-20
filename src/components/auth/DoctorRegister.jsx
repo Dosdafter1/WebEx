@@ -1,7 +1,8 @@
+import React from 'react';
 import React, { useRef } from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { Option } from 'antd/es/mentions';
-const Register = () => {
+const DoctorRegister = () => {
     const form = useRef(null);
     const initialValues = {
         fname: '',
@@ -10,6 +11,7 @@ const Register = () => {
         password: '',
         confirmPassword: '',
         phone: '',
+        speciality: ''
     }
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
@@ -37,12 +39,12 @@ const Register = () => {
             initialValues={initialValues}
             size='middle'>
             <Form.Item wrapperCol={{offset: 8}}>
-                <h2>Registration</h2>
+                <h2>Registration doctor</h2>
             </Form.Item>
             <Form.Item
                 label='First name'
                 name='fname'
-                rules={[{ required: true,message: 'Please input your first name' },
+                rules={[{ required: true,message: 'Please input doctor first name' },
                         {min:2,message:'To small'},
                         {max:20,message:'To large'},
                         {pattern:/^[a-z A-Z]+$/,message:'Only letters'}]}>
@@ -60,14 +62,14 @@ const Register = () => {
             <Form.Item
                 label='Email'
                 name='email'
-                rules={[{type: 'email',message: 'The input is not valid E-mail!',},
-                        {required: true,message: 'Please input your E-mail!',}]}>
+                rules={[{type: 'email',message: 'The doctor is not valid E-mail!',},
+                        {required: true,message: 'Please doctor your E-mail!',}]}>
                 <Input />
             </Form.Item>
             <Form.Item
                 label='Password'
                 name='password'
-                rules={[{required: true,message: 'Please input password!'},
+                rules={[{required: true,message: 'Please doctor password!'},
                         {min:6,message:'To small!'},
                         {max:16,message:'To large!'},]}>
                 <Input.Password />
@@ -77,7 +79,7 @@ const Register = () => {
                 name='confirmPassword'
                 dependencies={['password']}
                 hasFeedback
-                rules={[{required: true,message: 'Please confirm your password!'},
+                rules={[{required: true,message: 'Please confirm doctor password!'},
                         {min:6,message:'To small!'},
                         {max:16,message:'To large!'},
                         ({ getFieldValue }) => ({
@@ -96,7 +98,7 @@ const Register = () => {
                 rules={[
                 {
                     required: true,
-                    message: 'Please input your phone number!',
+                    message: 'Please input doctor phone number!',
                 },
                 ]}>
                 <Input
@@ -104,6 +106,17 @@ const Register = () => {
                     style={{
                         width: '100%',
                     }}/>
+            </Form.Item>
+            <Form.Item
+                name="speciality"
+                label="Speciality"
+                rules={[
+                {
+                    required: true,
+                    message: 'Please input doctor speciality number!',
+                },
+                ]}>
+                <Input />
             </Form.Item>
             <Form.Item wrapperCol={{offset: 8, span: 10}}>
                 <Button type="primary" htmlType="submit">
@@ -120,4 +133,4 @@ const Register = () => {
     );
 }
 
-export default Register;
+export default DoctorRegister;
