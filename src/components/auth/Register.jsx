@@ -1,8 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { Option } from 'antd/es/mentions';
+import AuthContext from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
     const form = useRef(null);
+    const {register} = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [serverError, setServerError] = useState('');
     const initialValues = {
         fname: '',
         lname: '',
@@ -24,8 +29,13 @@ const Register = () => {
     const onReset = () => {
         form.current?.resetFields();
     };
-    const submitHandler = (values) =>{
-        console.log(values);
+    const submitHandler = async (values) =>{
+        let name = values.fname + ' '+values.lname;
+        let res = await register(values.email,values.password,name,values.phone,2)
+        if(res===true)
+            navigate('/home');
+        else
+            setServerError('*Email exist!')
     }
     return (
         <>
@@ -104,6 +114,9 @@ const Register = () => {
                     style={{
                         width: '100%',
                     }}/>
+            </Form.Item>
+            <Form.Item  wrapperCol={{offset: 8}}>
+                <p style={{color:'red'}}>{serverError}</p>
             </Form.Item>
             <Form.Item wrapperCol={{offset: 8, span: 10}}>
                 <Button type="primary" htmlType="submit">

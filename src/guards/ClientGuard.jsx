@@ -8,8 +8,7 @@ const ClientGuard = ({children}) => {
     {
         return (
             <>
-                <span>You shouldn't be here please <NavLink path='/register'>register</NavLink> or 
-                    <NavLink path='/login'>login</NavLink></span>
+                <span>You shouldn't be here please <NavLink to='/register'>register</NavLink> or <NavLink to='/login'>login</NavLink></span>
             </>
         )
     }

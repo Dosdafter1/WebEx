@@ -1,12 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { Option } from 'antd/es/mentions';
+import AuthContext from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 const Edit = () => {
     const form = useRef(null);
+    const navigate = useNavigate();
+    const {isAuth,user,editUser} = useContext(AuthContext)
+    let names = ''
+    let phone = ''
+    if(isAuth){
+        names = user.name.split(' ')
+        phone = user.phone
+    }
     const initialValues = {
-        fname: '',
-        lname: '',
-        phone: '',
+        fname: names[0],
+        lname: names[1],
+        phone: phone,
     }
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
@@ -21,8 +31,25 @@ const Edit = () => {
     const onReset = () => {
         form.current?.resetFields();
     };
-    const submitHandler = (values) =>{
-        console.log(values);
+    const submitHandler = async (values) =>{
+        let name = values.fname + ' ' + values.lname
+        let phone = values.phone
+        let res = editUser(name,phone)
+        if(res)
+        {
+            switch(user.role)
+            {
+                case 1:
+                    navigate('/admin/home')
+                    break;
+                case 2:
+                    navigate('/home')
+                    break;
+                case 3:
+                    navigate('/doctor/home')
+                    break;
+            }
+        }
     }
     return (
         <>

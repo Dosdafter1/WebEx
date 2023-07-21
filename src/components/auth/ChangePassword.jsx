@@ -1,7 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
+import { Button, Form, Input, Select } from 'antd';
+import { Option } from 'antd/es/mentions';
+import AuthContext from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const ChangePassword = () => {
     const form = useRef(null);
+    const {isAuth,user,changePassword} = useContext(AuthContext);
+    const [serverError, setServerError] = useState('');
+    const navigate = useNavigate();
+    let email = ''
+    if(isAuth){
+        email = user.email
+    }
     const initialValues = {
         password: '',
         confirmPassword: '',
@@ -9,8 +20,23 @@ const ChangePassword = () => {
     const onReset = () => {
         form.current?.resetFields();
     };
-    const submitHandler = (values) =>{
-        console.log(values);
+    const submitHandler = async (values) =>{
+        let res = await changePassword(email,values.password)
+        if(res==true)
+        {
+            switch(user.role)
+            {
+                case 1:
+                    navigate('/admin/home')
+                    break;
+                case 2:
+                    navigate('/home')
+                    break;
+                case 3:
+                    navigate('/doctor/home')
+                    break;
+            }
+        }
     }
     return (
         <div>
@@ -29,7 +55,7 @@ const ChangePassword = () => {
                 label='Password'
                 name='password'
                 rules={[{required: true,message: 'Please input password!'},
-                        {min:6,message:'To small!'},
+                        {min:2,message:'To small!'},
                         {max:16,message:'To large!'},]}>
                 <Input.Password />
             </Form.Item>
@@ -39,7 +65,7 @@ const ChangePassword = () => {
                 dependencies={['password']}
                 hasFeedback
                 rules={[{required: true,message: 'Please confirm your password!'},
-                        {min:6,message:'To small!'},
+                        {min:2,message:'To small!'},
                         {max:16,message:'To large!'},
                         ({ getFieldValue }) => ({
                             validator(_, value) {

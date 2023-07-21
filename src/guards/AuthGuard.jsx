@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import AuthContext from '../contexts/AuthContext';
 import { NavLink } from 'react-router-dom';
 
-const AdminGuard = ({children}) => {
-    const {role} = useContext(AuthContext)
-    if(role!==1)
+const AuthGuard = ({children}) => {
+    const {isAuth} = useContext(AuthContext)
+    if(!isAuth)
     {
         return (
             <>
-                <span>You shouldn't be here please <NavLink to='/register'>register</NavLink> or <NavLink to='/login'>login</NavLink></span>
+                <span>Please <NavLink to='/register'>register</NavLink> or <NavLink to='/login'>login</NavLink></span>
             </>
         )
     }
@@ -19,4 +19,4 @@ const AdminGuard = ({children}) => {
     );
 }
 
-export default AdminGuard;
+export default AuthGuard;

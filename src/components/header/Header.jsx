@@ -1,15 +1,25 @@
 
 import React, { useContext, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import './header.css'
 import AuthContext from '../../contexts/AuthContext';
 const Header = () => {
-    const {isAuth} = useContext(AuthContext);
+    const {isAuth,user, logout} = useContext(AuthContext);
+    const navigate = useNavigate()
+    let name = 'user'
+    if(isAuth)
+    {
+        name = user.name
+    }
+    const logoutHandler = () =>{
+        logout();
+        navigate("/");
+    }
     const itemsNotAuth = [
         {
-            label: 'user',
+            label: name,
             key: 'SubMenu',
             icon: <UserOutlined />,
             children: [
@@ -24,20 +34,14 @@ const Header = () => {
                         <NavLink to='/login'>LogIn</NavLink>
                     ),
                     key: 'signup'
-                },
-                {
-                    label: (
-                        <NavLink>LogOut</NavLink>
-                    ),
-                    key: 'logout'
-                },
+                }
             ]
         },
         
     ]
     const itemsAuth = [
         {
-            label: 'user',
+            label: name,
             key: 'SubMenu',
             icon: <UserOutlined />,
             children: [
@@ -49,13 +53,13 @@ const Header = () => {
                 },
                 {
                     label: (
-                        <NavLink to='/changepassword'>ChangePassword</NavLink>
+                        <NavLink to='/change-password'>ChangePassword</NavLink>
                     ),
                     key: 'signup'
                 },
                 {
                     label: (
-                        <NavLink>LogOut</NavLink>
+                        <div onClick={()=>logoutHandler()}>LogOut</div>
                     ),
                     key: 'logout'
                 },

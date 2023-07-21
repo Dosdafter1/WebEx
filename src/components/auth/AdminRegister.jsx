@@ -2,11 +2,11 @@ import React, { useContext, useRef, useState } from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { Option } from 'antd/es/mentions';
 import AuthContext from '../../contexts/AuthContext';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-const DoctorRegister = () => {
+import { useNavigate } from 'react-router-dom';
+
+const AdminRegister = () => {
     const form = useRef(null);
-    const {doctorRegister} = useContext(AuthContext);
+    const {register} = useContext(AuthContext);
     const navigate = useNavigate();
     const [serverError, setServerError] = useState('');
     const initialValues = {
@@ -16,7 +16,6 @@ const DoctorRegister = () => {
         password: '',
         confirmPassword: '',
         phone: '',
-        speciality: ''
     }
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
@@ -31,17 +30,14 @@ const DoctorRegister = () => {
     const onReset = () => {
         form.current?.resetFields();
     };
-        const submitHandler = async (values) =>{
-            let name = values.fname + ' '+values.lname;
-            let res = await doctorRegister(values.email,values.password,name,values.phone,values.speciality)
-            if(res===true)
-            {
-                form.current?.resetFields();
-                toast('Doctor added!');
-            }
-            else
-                setServerError('*Email exist!')
-        }
+    const submitHandler = async (values) =>{
+        let name = values.fname + ' '+values.lname;
+        let res = await register(values.email,values.password,name,values.phone,1)
+        if(res===true)
+            navigate('/admin/home');
+        else
+            setServerError('*Email exist!')
+    }
     return (
         <>
         <Form
@@ -52,12 +48,12 @@ const DoctorRegister = () => {
             initialValues={initialValues}
             size='middle'>
             <Form.Item wrapperCol={{offset: 8}}>
-                <h2>Registration doctor</h2>
+                <h2>Registration</h2>
             </Form.Item>
             <Form.Item
                 label='First name'
                 name='fname'
-                rules={[{ required: true,message: 'Please input doctor first name' },
+                rules={[{ required: true,message: 'Please input your first name' },
                         {min:2,message:'To small'},
                         {max:20,message:'To large'},
                         {pattern:/^[a-z A-Z]+$/,message:'Only letters'}]}>
@@ -75,14 +71,14 @@ const DoctorRegister = () => {
             <Form.Item
                 label='Email'
                 name='email'
-                rules={[{type: 'email',message: 'The doctor is not valid E-mail!',},
-                        {required: true,message: 'Please doctor your E-mail!',}]}>
+                rules={[{type: 'email',message: 'The input is not valid E-mail!',},
+                        {required: true,message: 'Please input your E-mail!',}]}>
                 <Input />
             </Form.Item>
             <Form.Item
                 label='Password'
                 name='password'
-                rules={[{required: true,message: 'Please doctor password!'},
+                rules={[{required: true,message: 'Please input password!'},
                         {min:6,message:'To small!'},
                         {max:16,message:'To large!'},]}>
                 <Input.Password />
@@ -92,7 +88,7 @@ const DoctorRegister = () => {
                 name='confirmPassword'
                 dependencies={['password']}
                 hasFeedback
-                rules={[{required: true,message: 'Please confirm doctor password!'},
+                rules={[{required: true,message: 'Please confirm your password!'},
                         {min:6,message:'To small!'},
                         {max:16,message:'To large!'},
                         ({ getFieldValue }) => ({
@@ -111,7 +107,7 @@ const DoctorRegister = () => {
                 rules={[
                 {
                     required: true,
-                    message: 'Please input doctor phone number!',
+                    message: 'Please input your phone number!',
                 },
                 ]}>
                 <Input
@@ -119,17 +115,6 @@ const DoctorRegister = () => {
                     style={{
                         width: '100%',
                     }}/>
-            </Form.Item>
-            <Form.Item
-                name="speciality"
-                label="Speciality"
-                rules={[
-                {
-                    required: true,
-                    message: 'Please input doctor speciality number!',
-                },
-                ]}>
-                <Input />
             </Form.Item>
             <Form.Item  wrapperCol={{offset: 8}}>
                 <p style={{color:'red'}}>{serverError}</p>
@@ -141,11 +126,12 @@ const DoctorRegister = () => {
                 <Button htmlType="button" onClick={onReset}>
                     Reset
                 </Button>
-                <NavLink to='/admin/home'></NavLink>
+                Or 
+                <a>login now!</a>
             </Form.Item>
         </Form>
         </>
     );
 }
 
-export default DoctorRegister;
+export default AdminRegister;

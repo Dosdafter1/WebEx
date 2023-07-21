@@ -1,10 +1,13 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import axios from 'axios';
 import AuthContext from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const form = useRef(null);
-    const {login} = useContext(AuthContext)
+    const {login,role} = useContext(AuthContext)
+    const [serverError, setServerError] = useState('');
+    const navigate = useNavigate()
     const initialValues = {
         email: '',
         password: '',
@@ -13,8 +16,29 @@ const Login = () => {
     const onReset = () => {
         form.current?.resetFields();
     };
-    const submitHandler = (values) =>{
-        login({...values})
+    const submitHandler =  async (values) =>{
+        let res = await login({...values})
+        console.log(res)
+        if(res==true)
+        {
+            switch (role) {
+                case 1:
+                    navigate('/admin/home')
+                    break;
+                case 2:
+                    navigate('home')
+                    break;
+                case 3:
+                    navigate('/doctor/home')
+                    break;
+            
+                default:
+                    navigate('/')
+                    break;
+            }
+        }
+        else
+            setServerError('*Email or password incorrect!')
     }
     return (
         <>
@@ -26,7 +50,7 @@ const Login = () => {
             initialValues={initialValues}
             size='middle'>
             <Form.Item wrapperCol={{offset: 8}}>
-                <h2>SignUp</h2>
+                <h2>LogIn</h2>
             </Form.Item>
             <Form.Item
                 label='Email'
@@ -60,6 +84,9 @@ const Login = () => {
                             },
                         }),]}>
                 <Input.Password />
+            </Form.Item>
+            <Form.Item  wrapperCol={{offset: 8}}>
+                <p style={{color:'red'}}>{serverError}</p>
             </Form.Item>
             <Form.Item wrapperCol={{offset: 8, span: 10}}>
                 <Button type="primary" htmlType="submit">

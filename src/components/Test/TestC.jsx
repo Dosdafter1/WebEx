@@ -14,7 +14,7 @@ const TestC = () => {
         //const token = localStorage.getItem('token')
         if(token){
             try {
-                axios.defaults.headers.common['Accept']='application/json'
+                axios.defaults.headers.common['Accept']='*/*'
                 axios.defaults.headers.common['Authorization']=`Bearer ${token}`
                 const res = await axios.get('http://localhost:8000/api/auth/user')
                 console.log(res.data)
@@ -49,28 +49,12 @@ const TestC = () => {
             console.log(error)
         }
     }
-
-
-
-    const docTest = async () => {
-        let password = 'test'
-        try {
-            axios.defaults.headers.common['Accept']='application/json'
-            const response = await axios.post('http://localhost:8000/api/doctor/test')
-            console.log(response)
-            //await getUser();
-        } catch (error) {
-            toast(error)
-            console.log(error)
-        }
-    }
     return (
         <div>
             <button onClick={()=>{getTestC()}}>Click me C</button>
             <br />
             <button onClick={()=>{TestLogin()}}>Click me to Test Login</button>
             <br />
-            <button onClick={()=>{docTest()}}>Click me to Test Doctor Test</button>
         </div>
     );
 }
